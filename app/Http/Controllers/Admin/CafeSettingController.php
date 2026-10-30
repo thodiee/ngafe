@@ -36,7 +36,11 @@ class CafeSettingController extends Controller
 
         // Handle logo upload
         if ($request->hasFile('cafe_logo')) {
+<<<<<<< HEAD
             $request->validate(['cafe_logo' => 'image|mimes:jpeg,png,jpg,webp,svg|max:2048']);
+=======
+            $request->validate(['cafe_logo' => 'image|max:2048']);
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             $path = $request->file('cafe_logo')->store('public/logo');
             $url = Storage::url($path);
             Setting::updateOrCreate(['key' => 'cafe_logo'], ['value' => $url, 'type' => 'string']);

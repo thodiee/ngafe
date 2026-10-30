@@ -50,6 +50,7 @@ class OwnerReportController extends Controller
         $netProfit   = $grossProfit - $totalExpenses;
         $margin      = $grossRevenue > 0 ? round(($netProfit / $grossRevenue) * 100, 1) : 0;
 
+<<<<<<< HEAD
         $isSqlite = DB::connection()->getDriverName() === 'sqlite';
         $dateExpr  = $isSqlite ? "strftime('%Y-%m-%d', created_at)" : "DATE(created_at)";
         $monthExpr = $isSqlite ? "cast(strftime('%m', created_at) as integer)" : "MONTH(created_at)";
@@ -59,13 +60,23 @@ class OwnerReportController extends Controller
         $dailyRevenue = Order::where('payment_status','paid')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->selectRaw("{$dateExpr} as date, SUM(total_amount) as total")
+=======
+        // Revenue per hari (untuk chart)
+        $dailyRevenue = Order::where('payment_status','paid')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, SUM(total_amount) as total')
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             ->groupBy('date')->orderBy('date')
             ->pluck('total', 'date');
 
         // Revenue per bulan tahun ini (untuk chart YTD)
         $monthlyRevenue = Order::where('payment_status','paid')
             ->whereYear('created_at', $year)
+<<<<<<< HEAD
             ->selectRaw("{$monthExpr} as month, SUM(total_amount) as total")
+=======
+            ->selectRaw('MONTH(created_at) as month, SUM(total_amount) as total')
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             ->groupBy('month')->orderBy('month')
             ->pluck('total', 'month');
 
@@ -83,7 +94,11 @@ class OwnerReportController extends Controller
         // Jam tersibuk
         $peakHours = Order::where('payment_status','paid')
             ->whereBetween('created_at', [$startDate, $endDate])
+<<<<<<< HEAD
             ->selectRaw("{$hourExpr} as hour, COUNT(*) as cnt")
+=======
+            ->selectRaw('HOUR(created_at) as hour, COUNT(*) as cnt')
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             ->groupBy('hour')->orderByDesc('cnt')->take(3)->get();
 
         // ─── PEGAWAI ────────────────────────────────────────────────

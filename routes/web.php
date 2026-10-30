@@ -29,13 +29,21 @@ Route::get('/', function () {
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+<<<<<<< HEAD
 Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login')->name('login.post');
+=======
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ATS (Careers) - Publicly accessible
 Route::prefix('careers')->group(function () {
     Route::get('/', [AtsController::class, 'jobs'])->name('careers.jobs');
+<<<<<<< HEAD
     Route::post('/apply', [AtsController::class, 'apply'])->middleware('throttle:careers')->name('careers.apply');
+=======
+    Route::post('/apply', [AtsController::class, 'apply'])->name('careers.apply');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
 });
 
 // Authenticated Routes
@@ -50,7 +58,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/shift/summary/{id}', [\App\Http\Controllers\PosShiftController::class, 'summary'])->name('pos.shift.summary');
 
         Route::get('/menu', [PosController::class, 'menu'])->name('pos.menu');
+<<<<<<< HEAD
         Route::post('/order', [PosController::class, 'storeOrder'])->middleware('throttle:orders')->name('pos.order.store');
+=======
+        Route::post('/order', [PosController::class, 'storeOrder'])->name('pos.order.store');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         Route::get('/receipt/{order}', [PosController::class, 'receipt'])->name('pos.receipt');
         Route::post('/table-payment/{order}', [PosController::class, 'processTablePayment'])->name('pos.table-payment');
         Route::get('/live-status', [PosController::class, 'liveStatus'])->name('pos.live-status');
@@ -71,14 +83,24 @@ Route::middleware('auth')->group(function () {
     // HR Routes (for employees)
     Route::prefix('hr')->group(function () {
         Route::get('/', [HrController::class, 'dashboard'])->name('hr.dashboard');
+<<<<<<< HEAD
         Route::post('/clock-in', [HrController::class, 'clockIn'])->middleware('throttle:hr-attendance')->name('hr.clockIn');
         Route::post('/clock-out', [HrController::class, 'clockOut'])->middleware('throttle:hr-attendance')->name('hr.clockOut');
         Route::post('/register-face', [HrController::class, 'registerFace'])->middleware('throttle:hr-attendance')->name('hr.registerFace');
+=======
+        Route::post('/clock-in', [HrController::class, 'clockIn'])->name('hr.clockIn');
+        Route::post('/clock-out', [HrController::class, 'clockOut'])->name('hr.clockOut');
+        Route::post('/register-face', [HrController::class, 'registerFace'])->name('hr.registerFace');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
     });
 
     // Inventory Public (if any)
     Route::prefix('inventory')->middleware(\App\Http\Middleware\AdminMiddleware::class.':inventory,kitchen')->group(function () {
         Route::get('/', [InventoryController::class, 'index'])->name('inventory.index');
+<<<<<<< HEAD
+=======
+        Route::post('/update-stock', [InventoryController::class, 'updateStock'])->name('inventory.update');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
     });
 
     // Admin Routes
@@ -242,14 +264,26 @@ Route::middleware('auth')->group(function () {
 });
 
 // QRIS Callback (API/Webhook)
+<<<<<<< HEAD
 Route::post('/payment/qris/callback', [PosController::class, 'callbackQris'])->middleware('throttle:webhooks')->name('qris.callback');
+=======
+Route::post('/payment/qris/callback', [PosController::class, 'callbackQris'])->name('qris.callback');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
 
 // Self-Service Customer routes
 Route::prefix('self-service')->group(function () {
     Route::get('/table/{qr_token}', [\App\Http\Controllers\SelfServiceController::class, 'showMenu'])->name('self-service.table');
+<<<<<<< HEAD
     Route::post('/order', [\App\Http\Controllers\SelfServiceController::class, 'storeOrder'])->middleware('throttle:orders')->name('self-service.order.store');
     Route::get('/simulation/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'showSimulation'])->name('self-service.simulation');
     Route::get('/payment-success/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'paymentSuccess'])->name('self-service.payment-success');
     Route::get('/payment-pending/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'paymentPending'])->name('self-service.payment-pending');
     Route::post('/midtrans-webhook', [\App\Http\Controllers\SelfServiceController::class, 'midtransCallback'])->middleware('throttle:webhooks')->name('self-service.midtrans-webhook');
+=======
+    Route::post('/order', [\App\Http\Controllers\SelfServiceController::class, 'storeOrder'])->name('self-service.order.store');
+    Route::get('/simulation/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'showSimulation'])->name('self-service.simulation');
+    Route::get('/payment-success/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'paymentSuccess'])->name('self-service.payment-success');
+    Route::get('/payment-pending/{order_reference}', [\App\Http\Controllers\SelfServiceController::class, 'paymentPending'])->name('self-service.payment-pending');
+    Route::post('/midtrans-webhook', [\App\Http\Controllers\SelfServiceController::class, 'midtransCallback'])->name('self-service.midtrans-webhook');
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
 });

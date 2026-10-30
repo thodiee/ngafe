@@ -3,6 +3,7 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+<<<<<<< HEAD
     # Disable Server Signature
     ServerSignature Off
 
@@ -12,6 +13,8 @@
         Deny from all
     </FilesMatch>
 
+=======
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
     RewriteEngine On
 
     # Handle Authorization Header

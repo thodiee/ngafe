@@ -15,6 +15,7 @@ class PurchaseOrderController extends Controller
         return view('admin.purchase_orders.form', compact('suppliers'));
     }
     public function store(Request $request) {
+<<<<<<< HEAD
         $validated = $request->validate([
             'po_number' => 'required|string|max:50|unique:purchase_orders,po_number',
             'supplier_id' => 'required|exists:suppliers,id',
@@ -24,6 +25,9 @@ class PurchaseOrderController extends Controller
             'notes' => 'nullable|string|max:500'
         ]);
         PurchaseOrder::create($validated);
+=======
+        PurchaseOrder::create($request->all());
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.purchase_orders.index')->with('success', 'Data berhasil ditambahkan');
     }
     public function show(PurchaseOrder $item) {
@@ -34,6 +38,7 @@ class PurchaseOrderController extends Controller
         return view('admin.purchase_orders.form', compact('item', 'suppliers'));
     }
     public function update(Request $request, PurchaseOrder $item) {
+<<<<<<< HEAD
         $validated = $request->validate([
             'po_number' => 'required|string|max:50|unique:purchase_orders,po_number,' . $item->id,
             'supplier_id' => 'required|exists:suppliers,id',
@@ -43,6 +48,9 @@ class PurchaseOrderController extends Controller
             'notes' => 'nullable|string|max:500'
         ]);
         $item->update($validated);
+=======
+        $item->update($request->all());
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.purchase_orders.index')->with('success', 'Data berhasil diperbarui');
     }
     public function destroy(PurchaseOrder $item) {

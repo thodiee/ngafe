@@ -29,6 +29,7 @@ class AdminMiddleware
                 }
             }
         }
+<<<<<<< HEAD
 
         if ($request->expectsJson() || $request->is('api/*')) {
             return response()->json(['message' => 'Unauthorized Access'], 403);
@@ -38,6 +39,9 @@ class AdminMiddleware
             return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
+=======
+        
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect('/')->with('error', 'Unauthorized Access');
     }
 }

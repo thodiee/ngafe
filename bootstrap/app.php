@@ -11,10 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+<<<<<<< HEAD
         $middleware->web(append: [
             \App\Http\Middleware\SecurityHeadersMiddleware::class,
         ]);
 
+=======
+>>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         $middleware->validateCsrfTokens(except: [
             '/payment/qris/callback',
             '/self-service/midtrans-webhook'
