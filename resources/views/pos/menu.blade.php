@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<div class="flex flex-col lg:flex-row gap-6 h-[85vh] animate-fade-in-up">
+<div class="flex flex-col lg:flex-row gap-6 min-h-screen lg:h-[calc(100vh-6.5rem)] animate-fade-in-up pb-8 lg:pb-0">
     <!-- Menu Section -->
     <div class="w-full lg:w-2/3 flex flex-col h-full">
         <div class="flex justify-between items-center mb-4">

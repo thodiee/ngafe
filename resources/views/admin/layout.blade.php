@@ -151,7 +151,11 @@
 
         /* Text colors */
         html:not(.dark) #mainContent .text-white {
-            color: #2c2520 !important;
+            color: #1e293b !important;
+        }
+        html:not(.dark) #mainContent .text-slate-100,
+        html:not(.dark) #mainContent .text-slate-50 {
+            color: #1e293b !important;
         }
         html:not(.dark) #mainContent .text-slate-300 {
             color: #475569 !important;
@@ -161,6 +165,25 @@
         }
         html:not(.dark) #mainContent .text-slate-200 {
             color: #334155 !important;
+        }
+
+        /* Preserve white text on buttons and colored badges in light mode */
+        html:not(.dark) #mainContent button.text-white,
+        html:not(.dark) #mainContent a.text-white,
+        html:not(.dark) #mainContent button .text-white,
+        html:not(.dark) #mainContent a .text-white,
+        html:not(.dark) #mainContent [class*="bg-emerald"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-amber"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-blue"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-indigo"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-rose"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-red"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-purple"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-brand"] .text-white,
+        html:not(.dark) #mainContent [class*="bg-slate-900"] .text-white,
+        html:not(.dark) #mainContent .btn-primary,
+        html:not(.dark) .modal-content button.text-white {
+            color: #ffffff !important;
         }
 
         /* Border colors */
@@ -179,28 +202,53 @@
         /* Form inputs */
         html:not(.dark) #mainContent input,
         html:not(.dark) #mainContent select,
-        html:not(.dark) #mainContent textarea {
+        html:not(.dark) #mainContent textarea,
+        html:not(.dark) [id$="Modal"] input,
+        html:not(.dark) [id$="Modal"] select,
+        html:not(.dark) [id$="Modal"] textarea {
             background-color: #ffffff !important;
-            color: #2c2520 !important;
+            color: #1e293b !important;
             border-color: #e2e8f0 !important;
         }
         html:not(.dark) #mainContent input:focus,
         html:not(.dark) #mainContent select:focus,
-        html:not(.dark) #mainContent textarea:focus {
+        html:not(.dark) #mainContent textarea:focus,
+        html:not(.dark) [id$="Modal"] input:focus,
+        html:not(.dark) [id$="Modal"] select:focus,
+        html:not(.dark) [id$="Modal"] textarea:focus {
             border-color: #d4af37 !important;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15) !important;
         }
 
         /* Table rows */
-        html:not(.dark) #mainContent .border-slate-800\/50 {
+        html:not(.dark) #mainContent .border-slate-800\/50,
+        html:not(.dark) #mainContent .border-slate-700\/50,
+        html:not(.dark) #mainContent .border-slate-700\/60 {
             border-color: #f1f5f9 !important;
         }
-        html:not(.dark) #mainContent .hover\:bg-slate-800\/30:hover {
+        html:not(.dark) #mainContent .hover\:bg-slate-800\/30:hover,
+        html:not(.dark) #mainContent .hover\:bg-slate-700\/30:hover {
             background-color: #f8fafc !important;
         }
 
-        /* Modal backgrounds */
-        html:not(.dark) .bg-slate-800 {
-            /* Modals outside mainContent also need override */
+        /* Modal backgrounds in Light Mode */
+        html:not(.dark) [id$="Modal"] .bg-slate-800,
+        html:not(.dark) [id$="modal"] .bg-slate-800 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #1e293b !important;
+        }
+        html:not(.dark) [id$="Modal"] .bg-slate-900,
+        html:not(.dark) [id$="modal"] .bg-slate-900 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #1e293b !important;
+        }
+        html:not(.dark) [id$="Modal"] .text-white,
+        html:not(.dark) [id$="modal"] .text-white,
+        html:not(.dark) [id$="Modal"] .text-slate-100,
+        html:not(.dark) [id$="modal"] .text-slate-100 {
+            color: #1e293b !important;
         }
 
         /* Badge backgrounds */

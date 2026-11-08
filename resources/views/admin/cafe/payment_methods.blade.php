@@ -1,101 +1,131 @@
 @extends('admin.layout')
 @section('content')
-@if(session('success'))
-<div class="mb-4 bg-emerald-500/20 text-emerald-400 p-4 rounded-xl border border-emerald-500/30"><i class="fa-solid fa-check-circle mr-2"></i>{{ session('success') }}</div>
-@endif
-
-<div class="flex justify-between items-center mb-6">
-    <div class="flex items-center gap-4">
-        <div class="w-12 h-12 bg-violet-500/20 text-violet-400 rounded-xl flex items-center justify-center text-2xl"><i class="fa-solid fa-wallet"></i></div>
+<div class="space-y-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                <i class="fa-solid fa-wallet text-base"></i>
+            </span>
+            <div>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Metode Pembayaran Kasir</h2>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Kelola opsi kanal pembayaran yang tersedia pada sistem kasir (POS).</p>
+            </div>
+        </div>
         <div>
-            <h2 class="text-3xl font-bold">Metode Pembayaran</h2>
-            <p class="text-slate-400">Atur metode bayar yang tersedia di kasir.</p>
+            <button onclick="openPayModal()" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white px-5 py-2.5 rounded-xl font-semibold shadow-lg shadow-violet-600/20 active:scale-95 transition-all text-sm">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Tambah Metode</span>
+            </button>
         </div>
     </div>
-    <button onclick="openPayModal()" class="bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-lg font-bold transition">
-        <i class="fa-solid fa-plus mr-2"></i>Tambah Metode
-    </button>
-</div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    @forelse($methods as $method)
-    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-5 flex flex-col gap-3">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl {{ $method->is_active ? 'bg-violet-500/20 text-violet-400' : 'bg-slate-700 text-slate-500' }} flex items-center justify-center text-lg">
-                    <i class="fa-solid {{ $method->icon ?? 'fa-credit-card' }}"></i>
-                </div>
-                <div>
-                    <div class="font-bold">{{ $method->name }}</div>
-                    <div class="text-xs {{ $method->is_active ? 'text-emerald-400' : 'text-slate-500' }}">
-                        {{ $method->is_active ? 'Aktif' : 'Nonaktif' }}
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        @forelse($methods as $method)
+        <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 flex flex-col justify-between shadow-sm hover:shadow-md transition">
+            <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl {{ $method->is_active ? 'bg-violet-500/15 text-violet-600 dark:text-violet-400 border border-violet-500/30' : 'bg-slate-100 dark:bg-slate-700 text-slate-400' }} flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-solid {{ $method->icon ?? 'fa-credit-card' }}"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-slate-900 dark:text-white text-base">{{ $method->name }}</div>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold {{ $method->is_active ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400' }}">
+                                <span class="w-2 h-2 rounded-full {{ $method->is_active ? 'bg-emerald-500' : 'bg-slate-400' }}"></span>
+                                {{ $method->is_active ? 'Aktif di Kasir' : 'Nonaktif' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="editPayMethod({{ $method->id }}, '{{ addslashes($method->name) }}', '{{ addslashes($method->icon) }}', {{ $method->is_active ? 1 : 0 }}, {{ $method->has_surcharge ? 1 : 0 }}, {{ $method->surcharge_rate }})" class="p-2 rounded-lg bg-brand-500/10 text-brand-600 dark:text-brand-400 hover:bg-brand-500/20 transition" title="Edit">
+                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                        </button>
+                        <form action="{{ route('admin.cafe.payment_methods.destroy', $method) }}" method="POST" class="inline" onsubmit="return confirm('Hapus metode {{ $method->name }}?')">
+                            @csrf @method('DELETE')
+                            <button type="submit" class="p-2 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 transition" title="Hapus">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="editPayMethod({{ $method->id }}, '{{ $method->name }}', '{{ $method->icon }}', {{ $method->is_active ? 1 : 0 }}, {{ $method->has_surcharge ? 1 : 0 }}, {{ $method->surcharge_rate }})" class="text-blue-400 hover:text-blue-300 text-sm"><i class="fa-solid fa-edit"></i></button>
-                <form action="{{ route('admin.cafe.payment_methods.destroy', $method) }}" method="POST" class="inline" onsubmit="return confirm('Hapus?')">
-                    @csrf @method('DELETE')
-                    <button class="text-red-400 hover:text-red-300 text-sm"><i class="fa-solid fa-trash"></i></button>
-                </form>
+
+                @if($method->has_surcharge)
+                <div class="inline-flex items-center gap-1.5 text-xs bg-orange-500/10 text-orange-600 dark:text-orange-400 px-3 py-1.5 rounded-xl border border-orange-500/20 font-medium">
+                    <i class="fa-solid fa-percent text-[10px]"></i>
+                    <span>Surcharge / Biaya Tambahan: <b>{{ $method->surcharge_rate }}%</b></span>
+                </div>
+                @endif
             </div>
         </div>
-        @if($method->has_surcharge)
-        <div class="text-xs bg-orange-500/10 text-orange-400 px-3 py-1 rounded-lg border border-orange-500/20">
-            <i class="fa-solid fa-percent mr-1"></i>Biaya tambahan: {{ $method->surcharge_rate }}%
+        @empty
+        <div class="col-span-full p-12 text-center bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400">
+            <i class="fa-solid fa-wallet text-5xl mb-3 opacity-30"></i>
+            <p>Belum ada metode pembayaran yang terdaftar.</p>
         </div>
-        @endif
+        @endforelse
     </div>
-    @empty
-    <div class="col-span-3 text-center py-16 text-slate-400">
-        <i class="fa-solid fa-wallet text-5xl mb-4 block opacity-30"></i>
-        Belum ada metode pembayaran. Tambahkan yang pertama.
-    </div>
-    @endforelse
 </div>
 
-<!-- Modal Tambah/Edit -->
-<div id="payModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 flex">
-    <div class="bg-slate-800 p-6 rounded-2xl w-full max-w-md border border-slate-700 shadow-2xl">
-        <h3 id="payModalTitle" class="text-xl font-bold mb-5">Tambah Metode Pembayaran</h3>
-        <form id="payForm" action="{{ route('admin.cafe.payment_methods.store') }}" method="POST">
+<!-- Modal Tambah/Edit Metode -->
+<div id="payModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4 transition-all">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md border border-slate-200 dark:border-slate-800 shadow-2xl p-6 sm:p-7 relative">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 id="payModalTitle" class="text-lg font-bold text-slate-900 dark:text-white">Tambah Metode Pembayaran</h3>
+            <button onclick="closePayModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="payForm" action="{{ route('admin.cafe.payment_methods.store') }}" method="POST" class="mt-5 space-y-4">
             @csrf
             <input type="hidden" name="_method" id="payMethod" value="POST">
-            <div class="mb-4">
-                <label class="block text-sm mb-1 text-slate-400">Nama Metode</label>
-                <input type="text" name="name" id="payName" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-violet-500 outline-none transition" placeholder="cth: QRIS, Cash, Transfer BCA" required>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">Nama Metode</label>
+                <input type="text" name="name" id="payName" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:border-violet-500 outline-none transition" placeholder="Contoh: QRIS, Tunai, Kartu Debit BCA" required>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm mb-1 text-slate-400">Ikon (Font Awesome class)</label>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">Ikon (Font Awesome class)</label>
                 <div class="flex gap-2">
-                    <input type="text" name="icon" id="payIcon" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-violet-500 outline-none transition" placeholder="fa-qrcode">
-                    <div class="w-12 h-12 flex items-center justify-center bg-slate-900 border border-slate-700 rounded-xl text-violet-400 text-xl" id="iconPreview"><i class="fa-solid fa-credit-card"></i></div>
+                    <input type="text" name="icon" id="payIcon" class="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:border-violet-500 outline-none transition" placeholder="fa-qrcode">
+                    <div class="w-11 h-11 flex items-center justify-center bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-violet-500 text-lg shrink-0" id="iconPreview">
+                        <i class="fa-solid fa-credit-card"></i>
+                    </div>
                 </div>
-                <p class="text-xs text-slate-500 mt-1">Pilih dari: fa-money-bill, fa-qrcode, fa-credit-card, fa-mobile-screen, fa-university</p>
+                <p class="text-[11px] text-slate-400 mt-1">Pilihan: fa-money-bill, fa-qrcode, fa-credit-card, fa-mobile-screen, fa-building-columns</p>
             </div>
-            <div class="mb-4 flex items-center justify-between bg-slate-900 px-4 py-3 rounded-xl border border-slate-700">
-                <span class="text-sm text-slate-400">Status Aktif</span>
+
+            <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Status Aktif di Kasir</span>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" name="is_active" id="payActive" value="1" class="sr-only peer" checked>
-                    <div class="w-10 h-5 bg-slate-600 peer-checked:bg-violet-600 rounded-full peer transition-colors"></div>
-                    <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                    <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-checked:bg-violet-600 rounded-full peer transition-colors"></div>
+                    <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
                 </label>
             </div>
-            <div class="mb-4 flex items-center justify-between bg-slate-900 px-4 py-3 rounded-xl border border-slate-700">
-                <span class="text-sm text-slate-400">Ada Biaya Tambahan (Surcharge)?</span>
+
+            <div class="flex items-center justify-between bg-slate-50 dark:bg-slate-950 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+                <span class="text-xs font-bold text-slate-700 dark:text-slate-300">Biaya Tambahan (Surcharge)?</span>
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" name="has_surcharge" id="paySurcharge" value="1" class="sr-only peer" onchange="toggleSurcharge(this)">
-                    <div class="w-10 h-5 bg-slate-600 peer-checked:bg-orange-500 rounded-full peer transition-colors"></div>
-                    <div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
+                    <div class="w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-checked:bg-orange-500 rounded-full peer transition-colors"></div>
+                    <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-5"></div>
                 </label>
             </div>
-            <div id="surchargeRateInput" class="mb-5 hidden">
-                <label class="block text-sm mb-1 text-slate-400">Persentase Biaya Tambahan (%)</label>
-                <input type="number" name="surcharge_rate" id="paySurchargeRate" step="0.01" min="0" max="100" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-orange-500 outline-none transition" placeholder="cth: 2.5">
+
+            <div id="surchargeRateInput" class="hidden">
+                <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-2">Persentase Biaya Tambahan (%)</label>
+                <input type="number" name="surcharge_rate" id="paySurchargeRate" step="0.01" min="0" max="100" class="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-slate-900 dark:text-white text-sm focus:border-orange-500 outline-none transition" placeholder="Contoh: 1.5">
             </div>
-            <div class="flex gap-2">
-                <button type="button" onclick="closePayModal()" class="flex-1 py-3 bg-slate-700 rounded-xl text-white">Batal</button>
-                <button type="submit" class="flex-1 py-3 bg-violet-600 hover:bg-violet-500 text-white font-bold rounded-xl">Simpan</button>
+
+            <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                <button type="button" onclick="closePayModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+                    Batal
+                </button>
+                <button type="submit" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white font-bold shadow-lg shadow-violet-600/20 active:scale-95 transition text-sm">
+                    Simpan Metode
+                </button>
             </div>
         </form>
     </div>
@@ -118,10 +148,11 @@ function openPayModal() {
     document.getElementById('surchargeRateInput').classList.add('hidden');
     document.getElementById('iconPreview').innerHTML = '<i class="fa-solid fa-credit-card"></i>';
     document.getElementById('payModal').classList.remove('hidden');
+    document.getElementById('payModal').classList.add('flex');
 }
 
 function editPayMethod(id, name, icon, isActive, hasSurcharge, surchargeRate) {
-    document.getElementById('payModalTitle').innerText = 'Edit Metode Pembayaran';
+    document.getElementById('payModalTitle').innerText = 'Edit Metode: ' + name;
     document.getElementById('payForm').action = '/admin/cafe/payment-methods/' + id;
     document.getElementById('payMethod').value = 'PUT';
     document.getElementById('payName').value = name;
@@ -132,10 +163,12 @@ function editPayMethod(id, name, icon, isActive, hasSurcharge, surchargeRate) {
     document.getElementById('paySurchargeRate').value = surchargeRate;
     document.getElementById('surchargeRateInput').classList.toggle('hidden', hasSurcharge !== 1);
     document.getElementById('payModal').classList.remove('hidden');
+    document.getElementById('payModal').classList.add('flex');
 }
 
 function closePayModal() {
     document.getElementById('payModal').classList.add('hidden');
+    document.getElementById('payModal').classList.remove('flex');
 }
 </script>
 @endsection
