@@ -50,6 +50,10 @@
             max-width: 100vw;
             overflow-x: hidden;
         }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
         body { font-family: 'Outfit', sans-serif; }
         
         /* Mobile horizontal scroll for wide tables and cards */
@@ -150,7 +154,7 @@
 </head>
 <body class="bg-[#faf9f6] text-[#2c2520] dark:bg-[#09090d] dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-200 overflow-x-hidden max-w-full">
     @if(request()->is('self-service*'))
-        <nav class="glass-dark sticky top-0 z-50">
+        <nav class="glass-dark fixed top-0 left-0 right-0 w-full z-50">
             <div class="max-w-md mx-auto px-4">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center gap-2">
@@ -182,8 +186,9 @@
                 </div>
             </div>
         </nav>
+        <div class="h-16 shrink-0" aria-hidden="true"></div>
     @else
-        <nav class="glass-dark sticky top-0 z-50">
+        <nav class="glass-dark fixed top-0 left-0 right-0 w-full z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center">
@@ -302,7 +307,7 @@
                 </div>
             </div>
             @if(request()->is('/') || request()->is('careers*') || request()->is('login'))
-            <div id="landingMobileNav" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 py-4 space-y-2">
+            <div id="landingMobileNav" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 py-4 space-y-2 max-h-[calc(100vh-4rem)] overflow-y-auto shadow-xl">
                 <a href="{{ request()->is('/') ? '#' : url('/') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Beranda</a>
                 <a href="{{ request()->is('/') ? '#about-section' : url('/#about-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Tentang</a>
                 <a href="{{ request()->is('/') ? '#menu-section' : url('/#menu-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Menu</a>
@@ -314,6 +319,7 @@
             </div>
             @endif
         </nav>
+        <div class="h-16 shrink-0" aria-hidden="true"></div>
     @endif
     
     <main class="flex-grow min-w-0 max-w-full {{ request()->is('self-service*') ? 'max-w-md mx-auto w-full px-4 py-6' : 'max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8' }}">
