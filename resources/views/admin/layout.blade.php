@@ -124,19 +124,28 @@
         /* ============================================================ */
 
         /* Card backgrounds: bg-slate-800 → light white */
-        html:not(.dark) #mainContent .bg-slate-800 {
+        html:not(.dark) #mainContent .bg-slate-800,
+        html:not(.dark) #mainContent .bg-slate-800\/80,
+        html:not(.dark) #mainContent .bg-slate-800\/70,
+        html:not(.dark) #mainContent .bg-slate-800\/60 {
             background-color: #ffffff !important;
             border: 1px solid #e2e8f0;
         }
-        html:not(.dark) #mainContent .bg-slate-800\/50 {
+        html:not(.dark) #mainContent .bg-slate-800\/50,
+        html:not(.dark) #mainContent .bg-slate-800\/40,
+        html:not(.dark) #mainContent .bg-slate-800\/30 {
             background-color: rgba(248, 250, 252, 0.5) !important;
         }
 
         /* Section headers: bg-slate-900 → light gray */
-        html:not(.dark) #mainContent .bg-slate-900 {
+        html:not(.dark) #mainContent .bg-slate-900,
+        html:not(.dark) #mainContent .bg-slate-900\/80,
+        html:not(.dark) #mainContent .bg-slate-900\/70,
+        html:not(.dark) #mainContent .bg-slate-900\/60 {
             background-color: #f8fafc !important;
         }
-        html:not(.dark) #mainContent .bg-slate-900\/50 {
+        html:not(.dark) #mainContent .bg-slate-900\/50,
+        html:not(.dark) #mainContent .bg-slate-900\/40 {
             background-color: rgba(248, 250, 252, 0.5) !important;
         }
 
