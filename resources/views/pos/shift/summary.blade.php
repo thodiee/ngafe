@@ -46,8 +46,8 @@
                 </div>
             </div>
 
-            <h3 class="font-bold text-xl mb-4 text-slate-800 border-b-2 border-slate-800 pb-2">Rincian Produk Terjual</h3>
-            <table class="w-full text-left mb-8">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left mb-8 min-w-[360px]">
                 <thead>
                     <tr class="bg-slate-100 border-b border-slate-300">
                         <th class="p-3 font-bold text-slate-700">Menu</th>
@@ -69,6 +69,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
             
             <div class="text-center text-sm text-slate-500 mt-12 pt-8 border-t border-slate-200">
                 Laporan ini dicetak secara otomatis oleh Sistem Ngafe.

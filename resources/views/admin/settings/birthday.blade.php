@@ -12,11 +12,11 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+    <div class="bg-white dark:bg-slate-800 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
         <form action="{{ route('admin.settings.birthday.update') }}" method="POST" class="space-y-6">
             @csrf
             
-            <div class="p-5 bg-slate-50 dark:bg-slate-950 border border-amber-500/30 rounded-2xl space-y-3">
+            <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-950 border border-amber-500/30 rounded-2xl space-y-3">
                 <div class="flex items-center justify-between">
                     <h3 class="font-bold text-sm text-amber-600 dark:text-amber-400 flex items-center gap-2">
                         <i class="fa-solid fa-gift"></i>

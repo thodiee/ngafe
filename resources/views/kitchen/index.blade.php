@@ -89,26 +89,29 @@
         });
     </script>
 </head>
-<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-[#09090d] dark:text-slate-300 font-sans min-h-screen transition-colors duration-200">
+<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-[#09090d] dark:text-slate-300 font-sans min-h-screen transition-colors duration-200 overflow-x-hidden max-w-full">
     
     <!-- Header -->
-    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 sticky top-0 z-50 flex justify-between items-center shadow-md transition">
-        <div class="flex items-center space-x-4">
-            <h1 class="text-2xl font-bold text-[#2c2520] dark:text-white"><i class="fa-solid fa-fire-burner text-brand-500 mr-2 animate-pulse"></i> Layar Dapur (Kitchen Display)</h1>
-            <span class="bg-brand-500 text-white text-xs px-2 py-1 rounded-full font-bold animate-pulse">Auto-refresh 30s</span>
+    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-3 sm:px-6 py-3.5 sticky top-0 z-50 flex flex-wrap justify-between items-center gap-3 shadow-md transition">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <h1 class="text-lg sm:text-2xl font-bold text-[#2c2520] dark:text-white flex items-center">
+                <i class="fa-solid fa-fire-burner text-brand-500 mr-2 animate-pulse"></i>
+                <span>Layar Dapur <span class="hidden sm:inline">(KDS)</span></span>
+            </h1>
+            <span class="bg-brand-500 text-white text-[10px] sm:text-xs px-2 py-0.5 sm:py-1 rounded-full font-bold animate-pulse whitespace-nowrap">Auto 30s</span>
         </div>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2.5 sm:gap-4">
             <!-- Theme Toggle Switch -->
             <button onclick="toggleTheme()" class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-brand-500 hover:text-brand-600 transition" id="themeToggleBtn" title="Ganti Tema">
                 <i class="fa-solid fa-sun text-amber-500" id="themeSunIcon"></i>
                 <i class="fa-solid fa-moon text-brand-400 hidden" id="themeMoonIcon"></i>
             </button>
-            <a href="{{ route('admin.dashboard') }}" class="text-slate-600 dark:text-slate-400 hover:text-[#2c2520] dark:hover:text-white transition font-medium text-sm flex items-center"><i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Admin</a>
+            <a href="{{ route('admin.dashboard') }}" class="text-slate-600 dark:text-slate-400 hover:text-[#2c2520] dark:hover:text-white transition font-medium text-xs sm:text-sm flex items-center whitespace-nowrap"><i class="fa-solid fa-arrow-left mr-1"></i> <span class="hidden sm:inline">Kembali ke </span>Admin</a>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="p-6">
+    <main class="p-3.5 sm:p-6 min-w-0 max-w-full">
         @if(session('success'))
             <div class="bg-emerald-500/20 border border-emerald-500 text-emerald-700 dark:text-emerald-400 px-4 py-3 rounded-lg mb-6 shadow-lg">
                 <i class="fa-solid fa-check-circle mr-2"></i> {{ session('success') }}

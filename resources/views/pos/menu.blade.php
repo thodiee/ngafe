@@ -13,7 +13,7 @@
         </div>
 
         <!-- Quick Stats -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mb-4">
             <div class="bg-white/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 p-3 rounded-xl flex items-center gap-3 transition">
                 <div class="w-10 h-10 rounded-full bg-brand-500/10 text-brand-500 flex items-center justify-center text-lg"><i class="fa-solid fa-box-open"></i></div>
                 <div>
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 overflow-y-auto pr-2 pb-10" id="productGrid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 overflow-y-auto pr-1 sm:pr-2 pb-20 lg:pb-10" id="productGrid">
             @foreach($products as $product)
             <div class="product-card glass-luxury p-4 rounded-2xl cursor-pointer hover:border-brand-500 dark:hover:border-brand-400 hover:scale-[1.02] active:scale-[0.98] transition duration-200 group relative" 
                  data-category="{{ $product->category_id }}" 
@@ -88,7 +88,7 @@
     </div>
     
     <!-- Cart Section -->
-    <div class="w-full lg:w-1/3 glass-luxury p-6 rounded-3xl flex flex-col border-t-4 border-t-brand-500 dark:border-t-brand-400 shadow-2xl relative">
+    <div id="cartSection" class="w-full lg:w-1/3 glass-luxury p-4 sm:p-6 rounded-3xl flex flex-col border-t-4 border-t-brand-500 dark:border-t-brand-400 shadow-2xl relative">
         <!-- Tabs Header -->
         <div class="flex border-b border-slate-200 dark:border-slate-700 mb-4">
             <button type="button" onclick="switchSidebarTab('pos')" id="tabBtnPos" class="flex-1 pb-2 font-bold text-center border-b-2 border-brand-500 text-brand-600 dark:text-brand-400 text-sm flex items-center justify-center gap-1.5 transition focus:outline-none">
@@ -208,6 +208,23 @@
             @include('pos.partials.unpaid_orders')
         </div>
     </div>
+</div>
+
+<!-- Mobile Floating Cart Bar -->
+<div id="mobileCartBar" class="lg:hidden fixed bottom-4 left-4 right-4 z-40 bg-slate-900/95 dark:bg-slate-800/95 backdrop-blur-md border border-brand-500/40 text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between transition-all duration-300 hidden">
+    <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold text-sm border border-brand-500/30">
+            <span id="mobileCartCount">0</span>
+        </div>
+        <div>
+            <div class="text-[10px] text-slate-400 uppercase font-semibold">Total Tagihan</div>
+            <div class="text-base font-bold text-brand-400 font-mono" id="mobileCartTotal">Rp 0</div>
+        </div>
+    </div>
+    <button type="button" onclick="document.getElementById('cartSection').scrollIntoView({behavior: 'smooth'})" class="bg-gradient-to-r from-brand-600 to-amber-600 hover:from-brand-500 hover:to-amber-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition">
+        <span>Ke Keranjang</span>
+        <i class="fa-solid fa-arrow-down text-[10px]"></i>
+    </button>
 </div>
 
 <!-- Order Confirmation Modal -->
@@ -585,6 +602,21 @@
         }
 
         document.getElementById('cartTotal').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(finalTotal);
+        
+        // Update Mobile Floating Cart Bar
+        const mobileBar = document.getElementById('mobileCartBar');
+        const mobileCount = document.getElementById('mobileCartCount');
+        const mobileTotal = document.getElementById('mobileCartTotal');
+        if (mobileBar) {
+            if (cart.length > 0) {
+                mobileBar.classList.remove('hidden');
+                let totalQty = cart.reduce((acc, it) => acc + it.quantity, 0);
+                if (mobileCount) mobileCount.innerText = totalQty;
+                if (mobileTotal) mobileTotal.innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(finalTotal);
+            } else {
+                mobileBar.classList.add('hidden');
+            }
+        }
         
         // If confirmation modal is open, update it too
         if(!document.getElementById('confirmationModal').classList.contains('hidden')) {

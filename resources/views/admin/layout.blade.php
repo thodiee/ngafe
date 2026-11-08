@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin - Ngafe Management</title>
     <!-- SPA Navigation for instant page load -->
     <script type="module" src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.4/dist/turbo.es2017-umd.js"></script>
@@ -47,11 +48,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
         body { font-family: 'Outfit', sans-serif; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 20px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #334155; }
+
+        /* Mobile horizontal scroll for wide tables and cards */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+        }
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 6px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 9999px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 9999px;
+        }
+        .dark .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .dark .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.3);
+        }
 
         /* Collapsed Sidebar Styles */
         #sidebar.collapsed { width: 5rem; }
@@ -292,24 +320,42 @@
         });
     </script>
 </head>
-<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-slate-900 dark:text-slate-200 antialiased min-h-screen flex transition-colors duration-200">
-    
+<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-slate-900 dark:text-slate-200 antialiased min-h-screen flex transition-colors duration-200 overflow-x-hidden max-w-full">
+    @php
+        $adminHomeRoute = match(auth()->user()->role ?? null) {
+            'admin', 'owner' => route('admin.dashboard'),
+            'hr' => route('admin.users.index'),
+            'finance' => route('admin.finance.dashboard'),
+            'inventory' => route('inventory.index'),
+            'cashier' => route('pos.menu'),
+            'kitchen' => route('kitchen.index'),
+            'waiter' => route('waiter.index'),
+            default => url('/'),
+        };
+    @endphp
+
     <!-- Universal Header -->
-    <div class="fixed top-0 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 h-16 z-50 flex items-center justify-between px-4 transition-all duration-300">
-        <div class="flex items-center">
-            <button onclick="toggleSidebar()" class="text-slate-500 dark:text-slate-300 hover:text-[#2c2520] dark:hover:text-white focus:outline-none mr-4">
-                <i class="fa-solid fa-bars text-2xl"></i>
+    <div class="fixed top-0 left-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 h-16 z-50 flex items-center justify-between px-3 sm:px-4 transition-all duration-300">
+        <div class="flex items-center min-w-0">
+            <button onclick="toggleSidebar()" class="text-slate-500 dark:text-slate-300 hover:text-[#2c2520] dark:hover:text-white focus:outline-none mr-3 sm:mr-4 shrink-0">
+                <i class="fa-solid fa-bars text-xl sm:text-2xl"></i>
             </button>
-            <a href="/" class="text-xl font-bold text-[#2c2520] dark:text-white flex items-center"><i class="fa-solid fa-mug-hot text-brand-500 mr-2"></i> <span class="sidebar-text">Ngafe Admin</span></a>
+            <a href="{{ $adminHomeRoute }}" class="text-lg sm:text-xl font-bold text-[#2c2520] dark:text-white flex items-center truncate"><i class="fa-solid fa-mug-hot text-brand-500 mr-2 shrink-0"></i> <span class="sidebar-text truncate">Ngafe Admin</span></a>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            @if(in_array(auth()->user()->role, ['inventory', 'kitchen']))
+            <a href="{{ route('inventory.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition" title="Kembali ke Dashboard Stok">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span class="hidden sm:inline">Dashboard Stok</span>
+            </a>
+            @endif
             <!-- Theme Toggle -->
             <button onclick="toggleAdminTheme()" class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-brand-500 hover:text-brand-600 transition" title="Ganti Tema">
                 <i class="fa-solid fa-sun text-amber-500" id="adminSunIcon"></i>
                 <i class="fa-solid fa-moon text-brand-400 hidden" id="adminMoonIcon"></i>
             </button>
-            <div class="text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
-                <i class="fa-solid fa-user-circle text-brand-500 mr-1"></i> {{ auth()->user()->name }}
+            <div class="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2.5 sm:px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 truncate max-w-[130px] sm:max-w-none">
+                <i class="fa-solid fa-user-circle text-brand-500 mr-1"></i> <span class="truncate">{{ auth()->user()->name }}</span>
             </div>
         </div>
     </div>
@@ -378,7 +424,7 @@
             @endif
             @if(in_array(auth()->user()->role, ['admin', 'inventory', 'kitchen']))
             <div class="pt-2 pb-1">
-                @php $invActive = request()->routeIs('admin.suppliers.*') || request()->routeIs('admin.ingredients.*') || request()->routeIs('admin.purchase_orders.*') || request()->routeIs('admin.goods_receipts.*') || request()->routeIs('admin.stock_opnames.*') || request()->routeIs('admin.stock_transfers.*') || request()->routeIs('admin.stock_mutations.*') || request()->routeIs('admin.wastes.*') || request()->routeIs('admin.recipes.*'); @endphp
+                @php $invActive = request()->routeIs('inventory.*') || request()->routeIs('admin.suppliers.*') || request()->routeIs('admin.ingredients.*') || request()->routeIs('admin.purchase_orders.*') || request()->routeIs('admin.goods_receipts.*') || request()->routeIs('admin.stock_opnames.*') || request()->routeIs('admin.stock_transfers.*') || request()->routeIs('admin.stock_mutations.*') || request()->routeIs('admin.wastes.*') || request()->routeIs('admin.recipes.*'); @endphp
                 <button onclick="document.getElementById('submenu-inv').classList.toggle('hidden'); document.getElementById('icon-inv').classList.toggle('rotate-90')" class="section-btn relative w-full flex items-center gap-3 px-4 py-2 text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider mb-1 hover:text-emerald-500 dark:hover:text-emerald-400 transition rounded-lg hover:bg-emerald-500/10">
                     <div class="section-icon-wrapper bg-emerald-500/15 text-emerald-500"><i class="fa-solid fa-warehouse"></i></div>
                     <span class="section-label flex-grow text-left">Manajemen Inventory</span>
@@ -386,6 +432,7 @@
                     <span class="sidebar-tooltip">Inventory</span>
                 </button>
                 <div id="submenu-inv" class="space-y-1 {{ $invActive ? '' : 'hidden' }}">
+                    <a href="{{ route('inventory.index') }}" class="relative flex items-center px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition {{ request()->routeIs('inventory.*') ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300' }} ml-2"><div class="section-icon-wrapper bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-boxes-stacked"></i></div><span class="sidebar-text ml-2">Dashboard Stok</span><span class="sidebar-tooltip">Dashboard Stok</span></a>
                     <a href="{{ route('admin.suppliers.index') }}" class="relative flex items-center px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition {{ request()->routeIs('admin.suppliers.*') ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300' }} ml-2"><div class="section-icon-wrapper bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-truck-field"></i></div><span class="sidebar-text ml-2">Supplier</span><span class="sidebar-tooltip">Supplier</span></a>
                     <a href="{{ route('admin.ingredients.index') }}" class="relative flex items-center px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition {{ request()->routeIs('admin.ingredients.*') ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300' }} ml-2"><div class="section-icon-wrapper bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-box"></i></div><span class="sidebar-text ml-2">Bahan Baku</span><span class="sidebar-tooltip">Bahan Baku</span></a>
                     <a href="{{ route('admin.purchase_orders.index') }}" class="relative flex items-center px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition {{ request()->routeIs('admin.purchase_orders.*') ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-300' }} ml-2"><div class="section-icon-wrapper bg-emerald-500/10 text-emerald-400"><i class="fa-solid fa-file-invoice"></i></div><span class="sidebar-text ml-2">Purchase Order</span><span class="sidebar-tooltip">PO</span></a>
@@ -469,6 +516,13 @@
             @endif
 
             <div class="mt-4 border-t border-slate-700 pt-4 space-y-1">
+                @if(in_array(auth()->user()->role, ['admin', 'inventory', 'kitchen']))
+                <a href="{{ route('inventory.index') }}" class="relative flex items-center px-4 py-3 rounded-lg hover:bg-emerald-500/20 hover:text-emerald-400 transition text-slate-600 dark:text-slate-300 {{ request()->routeIs('inventory.*') ? 'bg-emerald-500/20 text-emerald-400' : '' }}">
+                    <div class="section-icon-wrapper bg-emerald-500/15 text-emerald-500"><i class="fa-solid fa-boxes-stacked"></i></div>
+                    <span class="sidebar-text ml-3">Dashboard Stok (Inventory)</span>
+                    <span class="sidebar-tooltip">Dashboard Stok</span>
+                </a>
+                @endif
                 @if(in_array(auth()->user()->role, ['admin', 'kitchen']))
                 <a href="{{ route('kitchen.index') }}" class="relative flex items-center px-4 py-3 rounded-lg hover:bg-orange-500/20 hover:text-orange-400 transition text-slate-600 dark:text-slate-300">
                     <div class="section-icon-wrapper bg-orange-500/15 text-orange-500"><i class="fa-solid fa-fire-burner"></i></div>
@@ -486,7 +540,7 @@
             </div>
         </nav>
         <div class="p-4 border-t border-slate-200 dark:border-slate-700">
-            <form action="{{ route('logout') }}" method="POST">
+            <form action="{{ route('logout') }}" method="POST" data-turbo="false">
                 @csrf
                 <button type="submit" class="relative flex items-center w-full text-left px-4 py-2 text-red-400 hover:bg-red-500/20 rounded-lg transition">
                     <div class="section-icon-wrapper bg-red-500/15 text-red-400"><i class="fa-solid fa-right-from-bracket"></i></div>
@@ -498,7 +552,7 @@
     </div>
 
     <!-- Main Content -->
-    <div id="mainContent" class="flex-grow w-full md:ml-64 p-4 md:p-8 pt-20 md:pt-20 min-h-screen transition-all duration-300">
+    <div id="mainContent" class="flex-grow w-full min-w-0 max-w-full md:ml-64 p-3.5 sm:p-6 md:p-8 pt-20 md:pt-20 min-h-screen transition-all duration-300 overflow-x-hidden">
         @if(session('success'))
             <div class="mb-4 p-4 rounded-lg bg-green-500/20 border border-green-500 text-green-700 dark:text-green-200">
                 <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}

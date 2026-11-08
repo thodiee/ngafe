@@ -8,12 +8,22 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller {
+    private function getHomeRouteForRole(string $role): string {
+        return match ($role) {
+            'admin', 'owner' => route('admin.dashboard'),
+            'hr' => route('admin.users.index'),
+            'finance' => route('admin.finance.dashboard'),
+            'cashier' => route('pos.menu'),
+            'kitchen' => route('kitchen.index'),
+            'waiter' => route('waiter.index'),
+            'inventory' => route('inventory.index'),
+            default => route('hr.dashboard'),
+        };
+    }
+
     public function showLogin() {
         if (Auth::check()) {
-            if (in_array(Auth::user()->role, ['admin', 'owner'])) {
-                return redirect()->route('admin.dashboard');
-            }
-            return redirect()->route('hr.dashboard');
+            return redirect($this->getHomeRouteForRole(Auth::user()->role));
         }
         return view('auth.login');
     }
@@ -38,10 +48,26 @@ class AuthController extends Controller {
             RateLimiter::clear($throttleKey);
             $request->session()->regenerate();
 
-            if (in_array(Auth::user()->role, ['admin', 'owner'])) {
-                return redirect()->intended(route('admin.dashboard'));
+            $role = Auth::user()->role;
+            $destination = $this->getHomeRouteForRole($role);
+
+            // Clean invalid intended URLs for non-admin roles (e.g. attempting to visit /admin)
+            $intended = session()->get('url.intended');
+            if ($intended && !in_array($role, ['admin', 'owner'])) {
+                $allowedPaths = ['/admin/users', '/admin/hr', '/admin/attendances', '/admin/finance', '/admin/pos/sales-report', '/inventory', '/pos', '/kitchen', '/waiter', '/hr'];
+                $isAllowed = false;
+                foreach ($allowedPaths as $allowedPath) {
+                    if (str_contains($intended, $allowedPath)) {
+                        $isAllowed = true;
+                        break;
+                    }
+                }
+                if (!$isAllowed) {
+                    session()->forget('url.intended');
+                }
             }
-            return redirect()->intended(route('hr.dashboard'));
+
+            return redirect()->intended($destination);
         }
 
         RateLimiter::hit($throttleKey, 60);

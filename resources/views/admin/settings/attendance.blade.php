@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+    <div class="bg-white dark:bg-slate-800 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
         <form action="{{ route('admin.settings.attendance.update') }}" method="POST" class="space-y-5">
             @csrf
             

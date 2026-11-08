@@ -12,12 +12,12 @@
         </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
+    <div class="bg-white dark:bg-slate-800 p-4 sm:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm">
         <form action="{{ route('admin.settings.loyalty.update') }}" method="POST" class="space-y-6">
             @csrf
             
             {{-- Earn Points Box --}}
-            <div class="p-5 bg-slate-50 dark:bg-slate-950 border border-brand-500/30 rounded-2xl space-y-3">
+            <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-950 border border-brand-500/30 rounded-2xl space-y-3">
                 <h3 class="font-bold text-sm text-brand-600 dark:text-brand-400 flex items-center gap-2">
                     <i class="fa-solid fa-gift"></i>
                     <span>Aturan Perolehan Poin Belanja</span>
@@ -34,7 +34,7 @@
             </div>
             
             {{-- Redeem Points Box --}}
-            <div class="p-5 bg-slate-50 dark:bg-slate-950 border border-emerald-500/30 rounded-2xl space-y-3">
+            <div class="p-4 sm:p-5 bg-slate-50 dark:bg-slate-950 border border-emerald-500/30 rounded-2xl space-y-3">
                 <h3 class="font-bold text-sm text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
                     <i class="fa-solid fa-ticket"></i>
                     <span>Aturan Penukaran Poin Diskon</span>

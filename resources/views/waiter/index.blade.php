@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <h2 class="text-3xl font-bold text-[#2c2520] dark:text-white"><i class="fa-solid fa-bell-concierge text-brand-500 mr-2"></i> Waiter Dashboard</h2>
-        <span class="bg-brand-500/20 text-brand-700 dark:text-brand-400 px-4 py-2 rounded-full font-bold shadow-inner">
+<div class="w-full max-w-7xl mx-auto py-4 sm:py-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#2c2520] dark:text-white"><i class="fa-solid fa-bell-concierge text-brand-500 mr-2"></i> Waiter Dashboard</h2>
+        <span class="bg-brand-500/20 text-brand-700 dark:text-brand-400 px-3.5 py-1.5 rounded-full font-bold text-xs sm:text-sm shadow-inner shrink-0">
             <span class="w-2 h-2 rounded-full bg-brand-500 dark:bg-brand-400 inline-block mr-2 animate-pulse"></span>
             Pesanan Siap Saji: {{ count($orders) }}
         </span>
@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         @forelse($orders as $order)
             <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col transition hover:shadow-xl hover:border-brand-500/50 dark:hover:border-brand-400/50">
                 <div class="bg-slate-50 dark:bg-slate-900 p-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">

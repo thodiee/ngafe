@@ -87,7 +87,6 @@ Route::middleware('auth')->group(function () {
         // Admin & Owner Shared
         Route::middleware(\App\Http\Middleware\AdminMiddleware::class.':owner')->group(function() {
             Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-            Route::get('pos/sales-report', [\App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('admin.pos.sales_report');
             Route::get('owner/report', [\App\Http\Controllers\Admin\OwnerReportController::class, 'index'])->name('admin.owner.report');
         });
 
@@ -141,9 +140,6 @@ Route::middleware('auth')->group(function () {
             Route::post('settings/loyalty', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('admin.settings.loyalty.update');
             Route::get('settings/birthday', [\App\Http\Controllers\Admin\SettingController::class, 'birthday'])->name('admin.settings.birthday');
             Route::post('settings/birthday', [\App\Http\Controllers\Admin\SettingController::class, 'updateBirthday'])->name('admin.settings.birthday.update');
-            
-            Route::get('settings/attendance', [\App\Http\Controllers\Admin\SettingController::class, 'attendance'])->name('admin.settings.attendance');
-            Route::post('settings/attendance', [\App\Http\Controllers\Admin\SettingController::class, 'updateAttendance'])->name('admin.settings.attendance.update');
             
             
 
@@ -204,11 +200,16 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/hr/payroll', [\App\Http\Controllers\HrAdvancedController::class, 'payroll'])->name('admin.hr.payroll');
             Route::post('/hr/payroll/generate', [\App\Http\Controllers\HrAdvancedController::class, 'generatePayroll'])->name('admin.hr.payroll.generate');
+
+            Route::get('settings/attendance', [\App\Http\Controllers\Admin\SettingController::class, 'attendance'])->name('admin.settings.attendance');
+            Route::post('settings/attendance', [\App\Http\Controllers\Admin\SettingController::class, 'updateAttendance'])->name('admin.settings.attendance.update');
         });
 
 
         // Inventory Management (Admin + Inventory + Kitchen)
         Route::middleware(\App\Http\Middleware\AdminMiddleware::class.':inventory,kitchen')->group(function() {
+            Route::get('/ingredient', fn() => redirect()->route('admin.ingredients.index'));
+            Route::get('/recipe', fn() => redirect()->route('admin.recipes.index'));
             Route::get('/ingredients', [AdminController::class, 'ingredients'])->name('admin.ingredients.index');
             Route::post('/ingredients', [AdminController::class, 'storeIngredient'])->name('admin.ingredients.store');
             Route::post('/ingredients/{ingredient}', [AdminController::class, 'updateIngredient'])->name('admin.ingredients.update');
@@ -233,6 +234,7 @@ Route::middleware('auth')->group(function () {
 
         // Finance (Admin + Finance + HR + Owner)
         Route::middleware(\App\Http\Middleware\AdminMiddleware::class.':finance,hr,owner')->group(function() {
+            Route::get('pos/sales-report', [\App\Http\Controllers\Admin\SalesReportController::class, 'index'])->name('admin.pos.sales_report');
             Route::get('finance', [\App\Http\Controllers\FinanceController::class, 'dashboard'])->name('admin.finance.dashboard');
             Route::get('finance/expenses', [\App\Http\Controllers\FinanceController::class, 'expenses'])->name('admin.finance.expenses');
             Route::post('finance/expenses', [\App\Http\Controllers\FinanceController::class, 'storeExpense'])->name('admin.finance.expenses.store');

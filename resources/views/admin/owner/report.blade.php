@@ -9,7 +9,7 @@
         </h1>
         <p class="text-slate-400 mt-1">Ringkasan lengkap bisnis — {{ $startDate->locale('id')->isoFormat('MMMM YYYY') }}</p>
     </div>
-    <form action="{{ route('admin.owner.report') }}" method="GET" class="flex gap-2 items-end">
+    <form action="{{ route('admin.owner.report') }}" method="GET" class="flex flex-wrap gap-2 items-end">
         <div>
             <label class="block text-xs text-slate-400 mb-1">Bulan</label>
             <select name="month" class="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm">
@@ -269,7 +269,7 @@
     </div>
     @if($lowStock->count() > 0)
     <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left">
+        <table class="w-full text-sm text-left min-w-[560px] whitespace-nowrap">
             <thead class="text-slate-400 border-b border-slate-700">
                 <tr>
                     <th class="pb-2 px-2">Bahan</th>

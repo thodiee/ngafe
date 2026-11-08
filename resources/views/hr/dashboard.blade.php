@@ -51,7 +51,7 @@
                 <h3 class="font-bold text-lg text-[#2c2520] dark:text-slate-200"><i class="fa-solid fa-clipboard-user mr-2 text-purple-500 dark:text-purple-400"></i> Absensi Hari Ini</h3>
             </div>
             <div class="p-4 overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-sm min-w-[500px] whitespace-nowrap">
                     <thead>
                         <tr class="text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-700">
                             <th class="pb-3 px-2">Pegawai</th>

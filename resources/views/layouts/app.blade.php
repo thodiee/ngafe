@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Ngafe - Solusi manajemen F&B terlengkap terintegrasi POS, HR, Inventaris, dan Rekrutmen karyawan. Nikmati kopi terbaik dan suasana ternyaman.">
     <meta name="keywords" content="cafe, kopi, cafe jakarta, pos cafe, manajemen cafe, workspace cafe, rekrutmen cafe">
     <title>Ngafe - F&B Management</title>
@@ -45,7 +46,34 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
         body { font-family: 'Outfit', sans-serif; }
+        
+        /* Mobile horizontal scroll for wide tables and cards */
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
+        }
+        .overflow-x-auto::-webkit-scrollbar {
+            height: 6px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 9999px;
+        }
+        .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.4);
+            border-radius: 9999px;
+        }
+        .dark .overflow-x-auto::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .dark .overflow-x-auto::-webkit-scrollbar-thumb {
+            background: rgba(212, 175, 55, 0.3);
+        }
         
         /* Premium Adaptive Glassmorphism */
         .glass, .glass-dark, .glass-luxury {
@@ -120,7 +148,7 @@
         });
     </script>
 </head>
-<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-[#09090d] dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-200">
+<body class="bg-[#faf9f6] text-[#2c2520] dark:bg-[#09090d] dark:text-slate-200 antialiased min-h-screen flex flex-col transition-colors duration-200 overflow-x-hidden max-w-full">
     @if(request()->is('self-service*'))
         <nav class="glass-dark sticky top-0 z-50">
             <div class="max-w-md mx-auto px-4">
@@ -183,6 +211,9 @@
                             <a href="{{ request()->is('/') ? '#contact-section' : url('/#contact-section') }}" class="hidden sm:inline-flex items-center justify-center px-6 py-2 text-sm font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 rounded-full transition-all duration-300">
                                 Hubungi Kami
                             </a>
+                            <button onclick="document.getElementById('landingMobileNav').classList.toggle('hidden')" class="lg:hidden text-slate-600 dark:text-slate-300 hover:text-brand-500 focus:outline-none p-1.5 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <i class="fa-solid fa-bars text-lg"></i>
+                            </button>
                         @else
                             @auth
                                 @if(in_array(auth()->user()->role, ['admin', 'cashier', 'owner']))
@@ -258,7 +289,7 @@
                                     <i class="fa-solid {{ $dashIcon }} w-5 text-center mr-2 text-brand-500"></i> {{ $dashLabel }}
                                 </a>
                                 <div class="h-px bg-slate-200 dark:bg-slate-700 my-2"></div>
-                                <form action="{{ route('logout') }}" method="POST" class="block w-full text-left">
+                                <form action="{{ route('logout') }}" method="POST" class="block w-full text-left" data-turbo="false">
                                     @csrf
                                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-500 dark:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-red-600 dark:hover:text-red-300 transition"><i class="fa-solid fa-right-from-bracket w-5 text-center mr-2"></i> Logout</button>
                                 </form>
@@ -270,10 +301,22 @@
                     </div>
                 </div>
             </div>
+            @if(request()->is('/') || request()->is('careers*') || request()->is('login'))
+            <div id="landingMobileNav" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-6 py-4 space-y-2">
+                <a href="{{ request()->is('/') ? '#' : url('/') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Beranda</a>
+                <a href="{{ request()->is('/') ? '#about-section' : url('/#about-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Tentang</a>
+                <a href="{{ request()->is('/') ? '#menu-section' : url('/#menu-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Menu</a>
+                <a href="{{ request()->is('/') ? '#gallery-section' : url('/#gallery-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Galeri</a>
+                <a href="{{ request()->is('/') ? '#testimonial-section' : url('/#testimonial-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Testimoni</a>
+                <a href="{{ request()->is('/') ? '#contact-section' : url('/#contact-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">Lokasi</a>
+                <a href="{{ request()->is('/') ? '#faq-section' : url('/#faq-section') }}" class="block py-1.5 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:text-brand-500">FAQ</a>
+                <a href="{{ route('careers.jobs') }}" class="block py-1.5 text-sm font-semibold {{ request()->is('careers*') ? 'text-brand-500' : 'text-slate-700 dark:text-slate-300' }} hover:text-brand-500">Recruitment</a>
+            </div>
+            @endif
         </nav>
     @endif
     
-    <main class="flex-grow {{ request()->is('self-service*') ? 'max-w-md mx-auto w-full px-4 py-6' : 'max-w-7xl mx-auto w-full px-8 sm:px-12 lg:px-16 py-8' }}">
+    <main class="flex-grow min-w-0 max-w-full {{ request()->is('self-service*') ? 'max-w-md mx-auto w-full px-4 py-6' : 'max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8' }}">
         @if(session('success'))
             <div class="mb-4 p-4 rounded-lg bg-green-500/20 border border-green-500 text-green-700 dark:text-green-200">
                 <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}

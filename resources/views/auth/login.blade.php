@@ -5,7 +5,32 @@
         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-600 via-brand-500 to-amber-500"></div>
         <h2 class="text-3xl font-bold mb-6 text-[#2c2520] dark:text-white text-center"><i class="fa-solid fa-mug-hot text-brand-500 mr-2"></i> Ngafe Login</h2>
         
-        <form action="{{ route('login.post') }}" method="POST" id="loginForm">
+        @if(session('error'))
+            <div class="mb-5 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-600 dark:text-red-400 text-xs flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-exclamation text-sm shrink-0"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="mb-5 p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-600 dark:text-red-400 text-xs">
+                @foreach($errors->all() as $err)
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation shrink-0"></i>
+                        <span>{{ $err }}</span>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="mb-5 p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-check text-sm shrink-0"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <form action="{{ route('login.post') }}" method="POST" id="loginForm" data-turbo="false">
             @csrf
             <div class="mb-4">
                 <label class="block text-sm text-slate-500 dark:text-slate-400 mb-1">Email</label>
@@ -23,7 +48,7 @@
 
         <div class="border-t border-slate-200 dark:border-slate-800 pt-5">
             <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 text-center mb-3">Akun Demo Cepat (Klik untuk Isi Otomatis)</p>
-            <div class="grid grid-cols-4 gap-2 text-xs">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                 <button type="button" onclick="fillDemo('owner@ngafe.com')" class="px-2 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-medium transition text-center truncate">👑 Owner</button>
                 <button type="button" onclick="fillDemo('admin@ngafe.com')" class="px-2 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 font-medium transition text-center truncate">⚙️ Admin</button>
                 <button type="button" onclick="fillDemo('cashier@ngafe.com')" class="px-2 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-medium transition text-center truncate">💵 Kasir</button>
@@ -42,5 +67,12 @@
         document.getElementById('emailInput').value = email;
         document.getElementById('passwordInput').value = 'password';
     }
+
+    // Refresh if loaded from back-forward cache to ensure fresh CSRF token
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 </script>
 @endsection

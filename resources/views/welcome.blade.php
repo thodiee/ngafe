@@ -21,13 +21,13 @@ $categoryImages = [
         <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent dark:from-black/95 dark:via-black/85"></div>
         
         <!-- Hero Content -->
-        <div class="relative z-10 max-w-4xl px-8 py-24 md:py-32 md:px-16 text-white space-y-8 animate-fade-in-up">
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/20 border border-brand-500/30 text-brand-300 text-sm font-semibold tracking-wide">
+        <div class="relative z-10 max-w-4xl px-5 py-16 sm:px-8 sm:py-24 md:py-32 md:px-16 text-white space-y-6 sm:space-y-8 animate-fade-in-up">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/20 border border-brand-500/30 text-brand-300 text-xs sm:text-sm font-semibold tracking-wide">
                 <i class="fa-solid fa-star text-xs"></i>
                 The Ultimate Cafe Experience
             </div>
             
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+            <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
                 Temukan Kehangatan <br>
                 <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-brand-500 to-amber-500">
                     Kopi & Cerita Anda
