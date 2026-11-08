@@ -204,36 +204,20 @@ class AdminController extends Controller {
     }
 
     public function storeTable(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'table_number' => 'required|string|max:50',
             'area_id' => 'required|exists:areas,id'
         ]);
         Table::create($validated);
-=======
-        $request->validate([
-            'table_number' => 'required|string',
-            'area_id' => 'required|exists:areas,id'
-        ]);
-        Table::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.tables.index')->with('success', 'Meja berhasil ditambahkan.');
     }
 
     public function updateTable(Request $request, Table $table) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'table_number' => 'required|string|max:50',
             'area_id' => 'required|exists:areas,id'
         ]);
         $table->update($validated);
-=======
-        $request->validate([
-            'table_number' => 'required|string',
-            'area_id' => 'required|exists:areas,id'
-        ]);
-        $table->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.tables.index')->with('success', 'Meja berhasil diupdate.');
     }
 
@@ -287,24 +271,14 @@ class AdminController extends Controller {
     }
 
     public function storeArea(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate(['name' => 'required|string|max:100']);
         Area::create($validated);
-=======
-        $request->validate(['name' => 'required|string']);
-        Area::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.areas.index')->with('success', 'Area berhasil ditambahkan.');
     }
 
     public function updateArea(Request $request, Area $area) {
-<<<<<<< HEAD
         $validated = $request->validate(['name' => 'required|string|max:100']);
         $area->update($validated);
-=======
-        $request->validate(['name' => 'required|string']);
-        $area->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return redirect()->route('admin.areas.index')->with('success', 'Area diupdate.');
     }
 
@@ -396,21 +370,12 @@ class AdminController extends Controller {
     }
 
     public function storePackageItem(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'package_id' => 'required|exists:products,id',
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1|max:100'
         ]);
         PackageItem::create($validated);
-=======
-        $request->validate([
-            'package_id' => 'required|exists:products,id',
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
-        ]);
-        PackageItem::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return back()->with('success', 'Produk ditambahkan ke paket');
     }
 

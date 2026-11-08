@@ -42,15 +42,11 @@ class SelfServiceController extends Controller
         $request->validate([
             'table_id' => 'required|exists:tables,id',
             'customer_name' => 'required|string|max:100',
-<<<<<<< HEAD
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1|max:100',
             'items.*.variants' => 'nullable|array',
             'items.*.notes' => 'nullable|string|max:255',
-=======
-            'items' => 'required|array',
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             'payment_method' => 'required|in:cashier,qris'
         ]);
 
@@ -61,7 +57,6 @@ class SelfServiceController extends Controller
             $totalAmount = 0;
             $orderItemsData = [];
 
-<<<<<<< HEAD
             // Calculate totals and compile item data using verified DB prices
             foreach ($request->items as $item) {
                 $product = Product::findOrFail($item['product_id']);
@@ -90,26 +85,10 @@ class SelfServiceController extends Controller
                             'variant_name' => strip_tags($varName),
                             'option_name' => strip_tags($optName),
                             'price_adjustment' => $priceAdj,
-=======
-            // Calculate totals and compile item data
-            foreach ($request->items as $item) {
-                $product = Product::findOrFail($item['product_id']);
-                $itemTotal = $product->price;
-                $variantsData = [];
-
-                if (!empty($item['variants'])) {
-                    foreach ($item['variants'] as $v) {
-                        $itemTotal += $v['price_adjustment'] ?? 0;
-                        $variantsData[] = [
-                            'variant_name' => $v['variant_name'],
-                            'option_name' => $v['option_name'],
-                            'price_adjustment' => $v['price_adjustment'] ?? 0,
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
                         ];
                     }
                 }
 
-<<<<<<< HEAD
                 $totalAmount += $itemTotal * $quantity;
                 $orderItemsData[] = [
                     'product_id' => $product->id,
@@ -117,15 +96,6 @@ class SelfServiceController extends Controller
                     'price' => (float)$product->price, // base price verified from DB
                     'variants' => $variantsData,
                     'notes' => isset($item['notes']) ? strip_tags(substr((string)$item['notes'], 0, 255)) : null
-=======
-                $totalAmount += $itemTotal * $item['quantity'];
-                $orderItemsData[] = [
-                    'product_id' => $product->id,
-                    'quantity' => $item['quantity'],
-                    'price' => $product->price, // base price
-                    'variants' => $variantsData,
-                    'notes' => $item['notes'] ?? null
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
                 ];
             }
 
@@ -317,7 +287,6 @@ class SelfServiceController extends Controller
     public function midtransCallback(Request $request)
     {
         $serverKey = Setting::get('midtrans_server_key');
-<<<<<<< HEAD
         if (empty($serverKey)) {
             Log::error('Midtrans Webhook: Server key is not configured');
             return response()->json(['status' => 'unauthorized'], 401);
@@ -332,17 +301,6 @@ class SelfServiceController extends Controller
         $localSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
         
         if (!hash_equals($localSignature, $signatureKey)) {
-=======
-        $signatureKey = $request->input('signature_key');
-        $orderId = $request->input('order_id');
-        $statusCode = $request->input('status_code');
-        $grossAmount = $request->input('gross_amount');
-        
-        // Verify signature for security
-        $localSignature = hash('sha512', $orderId . $statusCode . $grossAmount . $serverKey);
-        
-        if ($localSignature !== $signatureKey) {
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             Log::warning('Midtrans Webhook: Invalid signature');
             return response()->json(['status' => 'invalid_signature'], 400);
         }

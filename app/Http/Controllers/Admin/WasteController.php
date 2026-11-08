@@ -14,7 +14,6 @@ class WasteController extends Controller
         return view('admin.wastes.form');
     }
     public function store(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'waste_date' => 'required|date',
             'location' => 'required|in:gudang,dapur',
@@ -22,33 +21,26 @@ class WasteController extends Controller
         ]);
         $validated['user_id'] = auth()->id();
         Waste::create($validated);
-=======
-        Waste::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.wastes.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('admin.wastes.index')->with('success', 'Pencatatan waste berhasil ditambahkan');
     }
     public function show(Waste $item) {
-        return view('admin.wastes.show', compact('item'));
+        return redirect()->route('admin.wastes.edit', $item);
     }
     public function edit(Waste $item) {
         return view('admin.wastes.form', compact('item'));
     }
     public function update(Request $request, Waste $item) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'waste_date' => 'required|date',
             'location' => 'required|in:gudang,dapur',
             'notes' => 'nullable|string|max:500'
         ]);
         $item->update($validated);
-=======
-        $item->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.wastes.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('admin.wastes.index')->with('success', 'Pencatatan waste berhasil diperbarui');
     }
     public function destroy(Waste $item) {
         $item->delete();
-        return back()->with('success', 'Data berhasil dihapus');
+        return back()->with('success', 'Pencatatan waste berhasil dihapus');
     }
 }
 

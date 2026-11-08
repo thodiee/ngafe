@@ -222,7 +222,41 @@
                                 <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
                             </button>
                             <div class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl py-2 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50 transform origin-top-right group-hover:scale-100 scale-95">
-                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition"><i class="fa-solid fa-gauge w-5 text-center mr-2 text-brand-500"></i> Ngafe Admin</a>
+                                @php
+                                    $role = auth()->user()->role;
+                                    $dashRoute = route('admin.dashboard');
+                                    $dashLabel = 'Ngafe Admin';
+                                    $dashIcon = 'fa-gauge';
+
+                                    if ($role === 'cashier') {
+                                        $dashRoute = route('pos.menu');
+                                        $dashLabel = 'Kasir POS';
+                                        $dashIcon = 'fa-cash-register';
+                                    } elseif ($role === 'waiter') {
+                                        $dashRoute = route('waiter.index');
+                                        $dashLabel = 'Layar Waiter';
+                                        $dashIcon = 'fa-bell-concierge';
+                                    } elseif ($role === 'kitchen') {
+                                        $dashRoute = route('kitchen.index');
+                                        $dashLabel = 'Layar Dapur';
+                                        $dashIcon = 'fa-fire-burner';
+                                    } elseif ($role === 'hr') {
+                                        $dashRoute = route('admin.users.index');
+                                        $dashLabel = 'Portal HR';
+                                        $dashIcon = 'fa-users-gear';
+                                    } elseif ($role === 'inventory') {
+                                        $dashRoute = route('inventory.index');
+                                        $dashLabel = 'Inventaris';
+                                        $dashIcon = 'fa-warehouse';
+                                    } elseif ($role === 'finance') {
+                                        $dashRoute = route('admin.finance.dashboard');
+                                        $dashLabel = 'Keuangan';
+                                        $dashIcon = 'fa-coins';
+                                    }
+                                @endphp
+                                <a href="{{ $dashRoute }}" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition">
+                                    <i class="fa-solid {{ $dashIcon }} w-5 text-center mr-2 text-brand-500"></i> {{ $dashLabel }}
+                                </a>
                                 <div class="h-px bg-slate-200 dark:bg-slate-700 my-2"></div>
                                 <form action="{{ route('logout') }}" method="POST" class="block w-full text-left">
                                     @csrf

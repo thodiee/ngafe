@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers;
-<<<<<<< HEAD
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,28 +10,11 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller {
     public function showLogin() {
         if (Auth::check()) {
-=======
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
-class AuthController extends Controller {
-    public function showLogin() {
-        return view('auth.login');
-    }
-    public function login(Request $request) {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             if (in_array(Auth::user()->role, ['admin', 'owner'])) {
                 return redirect()->route('admin.dashboard');
             }
             return redirect()->route('hr.dashboard');
         }
-<<<<<<< HEAD
         return view('auth.login');
     }
 
@@ -67,10 +49,6 @@ class AuthController extends Controller {
         return back()->withErrors(['email' => 'Email atau kata sandi tidak valid.'])->withInput($request->only('email'));
     }
 
-=======
-        return back()->withErrors(['email' => 'Invalid email or password'])->withInput();
-    }
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
     public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();

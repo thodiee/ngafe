@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class StockMutationController extends Controller
 {
     public function index() {
-        $data = StockMutation::latest()->get();
+        $data = StockMutation::with('ingredient')->latest()->get();
         return view('admin.stock_mutations.index', compact('data'));
     }
     public function create() {

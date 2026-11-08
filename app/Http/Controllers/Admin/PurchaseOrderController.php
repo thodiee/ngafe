@@ -7,55 +7,49 @@ use Illuminate\Http\Request;
 class PurchaseOrderController extends Controller
 {
     public function index() {
-        $data = PurchaseOrder::latest()->get();
+        $data = PurchaseOrder::with('supplier')->latest()->get();
         return view('admin.purchase_orders.index', compact('data'));
     }
     public function create() {
-        $suppliers = \App\Models\Supplier::all();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
         return view('admin.purchase_orders.form', compact('suppliers'));
     }
     public function store(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'po_number' => 'required|string|max:50|unique:purchase_orders,po_number',
             'supplier_id' => 'required|exists:suppliers,id',
             'po_date' => 'required|date',
             'expected_date' => 'nullable|date',
             'status' => 'required|in:draft,sent,partial,completed,cancelled',
+            'total_amount' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:500'
         ]);
         PurchaseOrder::create($validated);
-=======
-        PurchaseOrder::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.purchase_orders.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('admin.purchase_orders.index')->with('success', 'Purchase Order berhasil ditambahkan');
     }
     public function show(PurchaseOrder $item) {
-        return view('admin.purchase_orders.show', compact('item'));
+        return redirect()->route('admin.purchase_orders.edit', $item);
     }
     public function edit(PurchaseOrder $item) {
-        $suppliers = \App\Models\Supplier::all();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
         return view('admin.purchase_orders.form', compact('item', 'suppliers'));
     }
     public function update(Request $request, PurchaseOrder $item) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'po_number' => 'required|string|max:50|unique:purchase_orders,po_number,' . $item->id,
             'supplier_id' => 'required|exists:suppliers,id',
             'po_date' => 'required|date',
             'expected_date' => 'nullable|date',
             'status' => 'required|in:draft,sent,partial,completed,cancelled',
+            'total_amount' => 'nullable|numeric|min:0',
             'notes' => 'nullable|string|max:500'
         ]);
         $item->update($validated);
-=======
-        $item->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.purchase_orders.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('admin.purchase_orders.index')->with('success', 'Purchase Order berhasil diperbarui');
     }
     public function destroy(PurchaseOrder $item) {
         $item->delete();
-        return back()->with('success', 'Data berhasil dihapus');
+        return back()->with('success', 'Purchase Order berhasil dihapus');
     }
 }
 

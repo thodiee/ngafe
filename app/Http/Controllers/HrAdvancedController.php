@@ -63,30 +63,18 @@ class HrAdvancedController extends Controller
     }
 
     public function storeSchedule(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
-=======
-        $request->validate([
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             'user_id' => 'required|exists:users,id',
             'shift_id' => 'required|exists:shifts,id',
             'date' => 'required|date'
         ]);
 
         // Check if already scheduled
-<<<<<<< HEAD
         $existing = Schedule::where('user_id', $validated['user_id'])->where('date', $validated['date'])->first();
         if ($existing) {
             $existing->update(['shift_id' => $validated['shift_id']]);
         } else {
             Schedule::create($validated);
-=======
-        $existing = Schedule::where('user_id', $request->user_id)->where('date', $request->date)->first();
-        if ($existing) {
-            $existing->update(['shift_id' => $request->shift_id]);
-        } else {
-            Schedule::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         }
         return back()->with('success', 'Jadwal berhasil disimpan');
     }

@@ -52,14 +52,10 @@ class PosController extends Controller
         $request->validate([
             'table_id' => 'required|exists:tables,id',
             'order_type' => 'required|in:dine_in,takeaway',
-<<<<<<< HEAD
             'items' => 'required|array|min:1',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1|max:100',
             'items.*.variants' => 'nullable|array',
-=======
-            'items' => 'required|array',
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             'payment_method' => 'required|in:cash,qris_gateway'
         ]);
 
@@ -72,7 +68,6 @@ class PosController extends Controller
         $orderItemsData = [];
 
         foreach ($request->items as $item) {
-<<<<<<< HEAD
             $product = Product::findOrFail($item['product_id']);
             $quantity = max(1, min(100, (int)$item['quantity']));
             $itemTotal = (float) $product->price;
@@ -98,36 +93,15 @@ class PosController extends Controller
                         'variant_name' => strip_tags($varName),
                         'option_name' => strip_tags($optName),
                         'price_adjustment' => $priceAdj,
-=======
-            $product = Product::find($item['product_id']);
-            $itemTotal = $product->price;
-            $variantsData = [];
-
-            if (!empty($item['variants'])) {
-                foreach ($item['variants'] as $v) {
-                    $itemTotal += $v['price_adjustment'] ?? 0;
-                    $variantsData[] = [
-                        'variant_name' => $v['variant_name'],
-                        'option_name' => $v['option_name'],
-                        'price_adjustment' => $v['price_adjustment'] ?? 0,
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
                     ];
                 }
             }
 
-<<<<<<< HEAD
             $totalAmount += $itemTotal * $quantity;
             $orderItemsData[] = [
                 'product_id' => $product->id,
                 'quantity' => $quantity,
                 'price' => (float)$product->price, // base price verified from DB
-=======
-            $totalAmount += $itemTotal * $item['quantity'];
-            $orderItemsData[] = [
-                'product_id' => $product->id,
-                'quantity' => $item['quantity'],
-                'price' => $product->price, // base price
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
                 'variants' => $variantsData
             ];
         }
@@ -253,7 +227,6 @@ class PosController extends Controller
     }
 
     public function callbackQris(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'transaction_id' => 'required|string|max:100',
             'status' => 'required|string|in:settlement,capture,deny,cancel,expire,pending'
@@ -284,12 +257,6 @@ class PosController extends Controller
             $order->update(['payment_status' => 'unpaid', 'order_status' => 'cancelled']);
         }
 
-=======
-        $order = Order::where('gateway_transaction_id', $request->transaction_id)->first();
-        if ($order && $request->status == 'settlement') {
-            $order->update(['payment_status' => 'paid', 'order_status' => 'processing']);
-        }
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
         return response()->json(['status' => 'ok']);
     }
 

@@ -14,7 +14,6 @@ class AtsController extends Controller
     }
 
     public function apply(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'job_vacancy_id' => 'required|exists:job_vacancies,id',
             'applicant_name' => 'required|string|max:100',
@@ -31,23 +30,6 @@ class AtsController extends Controller
             'applicant_name' => strip_tags(trim($validated['applicant_name'])),
             'email' => strtolower(trim($validated['email'])),
             'phone_number' => strip_tags(trim($validated['phone_number'])),
-=======
-        $request->validate([
-            'job_vacancy_id' => 'required|exists:job_vacancies,id',
-            'applicant_name' => 'required|string',
-            'email' => 'required|email',
-            'phone_number' => 'required|string',
-            'cv' => 'required|file|mimes:pdf|max:2048'
-        ]);
-
-        $cvPath = $request->file('cv')->store('cvs', 'public');
-
-        JobApplication::create([
-            'job_vacancy_id' => $request->job_vacancy_id,
-            'applicant_name' => $request->applicant_name,
-            'email' => $request->email,
-            'phone_number' => $request->phone_number,
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
             'cv_path' => $cvPath,
             'status' => 'submitted'
         ]);

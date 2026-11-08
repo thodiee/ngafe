@@ -7,15 +7,15 @@ use Illuminate\Http\Request;
 class GoodsReceiptController extends Controller
 {
     public function index() {
-        $data = GoodsReceipt::latest()->get();
+        $data = GoodsReceipt::with(['purchaseOrder', 'supplier'])->latest()->get();
         return view('admin.goods_receipts.index', compact('data'));
     }
     public function create() {
-        $purchase_orders = \App\Models\PurchaseOrder::all();
-        return view('admin.goods_receipts.form', compact('purchase_orders'));
+        $purchase_orders = \App\Models\PurchaseOrder::latest()->get();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
+        return view('admin.goods_receipts.form', compact('purchase_orders', 'suppliers'));
     }
     public function store(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'gr_number' => 'required|string|max:50|unique:goods_receipts,gr_number',
             'purchase_order_id' => 'nullable|exists:purchase_orders,id',
@@ -24,20 +24,17 @@ class GoodsReceiptController extends Controller
             'notes' => 'nullable|string|max:500'
         ]);
         GoodsReceipt::create($validated);
-=======
-        GoodsReceipt::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.goods_receipts.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('admin.goods_receipts.index')->with('success', 'Penerimaan Barang berhasil dicatat');
     }
     public function show(GoodsReceipt $item) {
-        return view('admin.goods_receipts.show', compact('item'));
+        return redirect()->route('admin.goods_receipts.edit', $item);
     }
     public function edit(GoodsReceipt $item) {
-        $purchase_orders = \App\Models\PurchaseOrder::all();
-        return view('admin.goods_receipts.form', compact('item', 'purchase_orders'));
+        $purchase_orders = \App\Models\PurchaseOrder::latest()->get();
+        $suppliers = \App\Models\Supplier::orderBy('name')->get();
+        return view('admin.goods_receipts.form', compact('item', 'purchase_orders', 'suppliers'));
     }
     public function update(Request $request, GoodsReceipt $item) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'gr_number' => 'required|string|max:50|unique:goods_receipts,gr_number,' . $item->id,
             'purchase_order_id' => 'nullable|exists:purchase_orders,id',
@@ -46,14 +43,11 @@ class GoodsReceiptController extends Controller
             'notes' => 'nullable|string|max:500'
         ]);
         $item->update($validated);
-=======
-        $item->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.goods_receipts.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('admin.goods_receipts.index')->with('success', 'Penerimaan Barang berhasil diperbarui');
     }
     public function destroy(GoodsReceipt $item) {
         $item->delete();
-        return back()->with('success', 'Data berhasil dihapus');
+        return back()->with('success', 'Penerimaan Barang berhasil dihapus');
     }
 }
 

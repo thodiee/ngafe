@@ -1,38 +1,56 @@
 @extends('admin.layout')
 @section('content')
 <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold">Manajemen Supplier</h2>
-    <a href="{{ route('admin.suppliers.create') }}" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition"><i class="fa-solid fa-plus mr-2"></i> Tambah Supplier</a>
+    <div>
+        <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Pemasok Bahan Baku (Supplier)</h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400">Daftar mitra distributor & vendor bahan baku kafe.</p>
+    </div>
+    <a href="{{ route('admin.suppliers.create') }}" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition inline-flex items-center gap-2">
+        <i class="fa-solid fa-plus"></i> Tambah Supplier
+    </a>
 </div>
-<div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+<div class="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 shadow-sm">
     <table class="w-full text-left">
-        <thead>
-            <tr class="border-b border-slate-700 text-slate-400">
-                <th class="pb-3 font-medium">Name</th>
-                <th class="pb-3 font-medium">Contact person</th>
-                <th class="pb-3 font-medium">Phone</th>
-                <th class="pb-3 font-medium">Email</th>
-                <th class="pb-3 font-medium">Address</th>
-                <th class="pb-3 font-medium">Aksi</th>
+        <thead class="bg-slate-900 border-b border-slate-700 text-slate-400 text-sm">
+            <tr>
+                <th class="py-3.5 px-4 font-semibold">Nama Supplier</th>
+                <th class="py-3.5 px-4 font-semibold">Kontak Person</th>
+                <th class="py-3.5 px-4 font-semibold">No. Telepon</th>
+                <th class="py-3.5 px-4 font-semibold">Email</th>
+                <th class="py-3.5 px-4 font-semibold">Alamat</th>
+                <th class="py-3.5 px-4 font-semibold text-right">Aksi</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach($data as $item)
-            <tr class="border-b border-slate-700/50">
-                <td class="py-4">{{ $item->name }}</td>
-                <td class="py-4">{{ $item->contact_person }}</td>
-                <td class="py-4">{{ $item->phone }}</td>
-                <td class="py-4">{{ $item->email }}</td>
-                <td class="py-4">{{ $item->address }}</td>
-                <td class="py-4">
-                    <a href="{{ route('admin.suppliers.edit', $item) }}" class="text-blue-400 hover:text-blue-300 mr-3"><i class="fa-solid fa-edit"></i> Edit</a>
+        <tbody class="divide-y divide-slate-700/50">
+            @forelse($data as $item)
+            <tr class="hover:bg-slate-700/30 transition">
+                <td class="py-3.5 px-4 font-medium text-white">
+                    <span class="inline-flex items-center gap-2">
+                        <i class="fa-solid fa-truck-field text-emerald-400"></i>
+                        {{ $item->name }}
+                    </span>
+                </td>
+                <td class="py-3.5 px-4 text-slate-300">{{ $item->contact_person ?? '-' }}</td>
+                <td class="py-3.5 px-4 text-slate-300 font-mono text-sm">{{ $item->phone ?? '-' }}</td>
+                <td class="py-3.5 px-4 text-slate-400 text-sm">{{ $item->email ?? '-' }}</td>
+                <td class="py-3.5 px-4 text-slate-400 text-sm">{{ $item->address ?? '-' }}</td>
+                <td class="py-3.5 px-4 text-right space-x-2">
+                    <a href="{{ route('admin.suppliers.edit', $item) }}" class="inline-flex items-center gap-1 text-sm bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg transition">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
                     <form action="{{ route('admin.suppliers.destroy', $item) }}" method="POST" class="inline-block">
                         @csrf @method('DELETE')
-                        <button type="submit" class="text-red-400 hover:text-red-300" onclick="return confirm('Yakin ingin menghapus?')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        <button type="submit" class="inline-flex items-center gap-1 text-sm bg-red-500/10 hover:bg-red-500/20 text-red-400 px-3 py-1.5 rounded-lg transition" onclick="return confirm('Yakin ingin menghapus supplier ini?')">
+                            <i class="fa-solid fa-trash"></i> Hapus
+                        </button>
                     </form>
                 </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="6" class="py-8 text-center text-slate-400">Belum ada pemasok/supplier yang ditambahkan.</td>
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

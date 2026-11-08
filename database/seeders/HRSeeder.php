@@ -20,7 +20,7 @@ class HRSeeder extends Seeder
         $thisMonth = $now->month;
         $thisYear = $now->year;
         
-        $lastMonthDate = $now->copy()->subMonth();
+        $lastMonthDate = $now->copy()->startOfMonth()->subMonth();
         $lastMonth = $lastMonthDate->month;
         $lastYear = $lastMonthDate->year;
 
@@ -201,10 +201,11 @@ class HRSeeder extends Seeder
 
             if ($baseSalary > 0) {
                 // Save Last Month Payroll (Paid)
-                Payroll::create([
+                Payroll::updateOrCreate([
                     'user_id' => $employee->id,
                     'period_month' => $lastMonth,
                     'period_year' => $lastYear,
+                ], [
                     'present_days' => $presentLastMonth,
                     'late_days' => $lateLastMonth,
                     'base_salary' => $baseSalary,
@@ -233,10 +234,11 @@ class HRSeeder extends Seeder
                 $bonusThisMonth = 150000; // Uang lembur event
                 $netSalaryThisMonth = $baseSalary + $allowanceThisMonth - $deductionThisMonth + $bonusThisMonth;
 
-                Payroll::create([
+                Payroll::updateOrCreate([
                     'user_id' => $employee->id,
                     'period_month' => $thisMonth,
                     'period_year' => $thisYear,
+                ], [
                     'present_days' => $presentThisMonth,
                     'late_days' => $lateThisMonth,
                     'base_salary' => $baseSalary,

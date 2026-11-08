@@ -14,7 +14,6 @@ class StockTransferController extends Controller
         return view('admin.stock_transfers.form');
     }
     public function store(Request $request) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'transfer_number' => 'required|string|max:50|unique:stock_transfers,transfer_number',
             'transfer_date' => 'required|date',
@@ -22,33 +21,26 @@ class StockTransferController extends Controller
         ]);
         $validated['user_id'] = auth()->id();
         StockTransfer::create($validated);
-=======
-        StockTransfer::create($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.stock_transfers.index')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('admin.stock_transfers.index')->with('success', 'Transfer stok berhasil ditambahkan');
     }
     public function show(StockTransfer $item) {
-        return view('admin.stock_transfers.show', compact('item'));
+        return redirect()->route('admin.stock_transfers.edit', $item);
     }
     public function edit(StockTransfer $item) {
         return view('admin.stock_transfers.form', compact('item'));
     }
     public function update(Request $request, StockTransfer $item) {
-<<<<<<< HEAD
         $validated = $request->validate([
             'transfer_number' => 'required|string|max:50|unique:stock_transfers,transfer_number,' . $item->id,
             'transfer_date' => 'required|date',
             'notes' => 'nullable|string|max:500'
         ]);
         $item->update($validated);
-=======
-        $item->update($request->all());
->>>>>>> d0249b4929156cbfb9bc7856996342536ace9f70
-        return redirect()->route('admin.stock_transfers.index')->with('success', 'Data berhasil diperbarui');
+        return redirect()->route('admin.stock_transfers.index')->with('success', 'Transfer stok berhasil diperbarui');
     }
     public function destroy(StockTransfer $item) {
         $item->delete();
-        return back()->with('success', 'Data berhasil dihapus');
+        return back()->with('success', 'Transfer stok berhasil dihapus');
     }
 }
 
